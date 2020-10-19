@@ -1,205 +1,73 @@
 package org.foodie.pojo;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.util.Date;
 
+@Data
 public class Users {
+    /**
+     * 主键id 用户id
+     */
     @Id
-    private Integer id;
+    private String id;
 
-    @Column(name = "create_time")
-    private Date createTime;
-
-    @Column(name = "update_time")
-    private Date updateTime;
-
-    private String avatar;
-
-    private String description;
-
-    private String email;
-
-    @Column(name = "expire_time")
-    private Date expireTime;
-
-    @Column(name = "mfa_key")
-    private String mfaKey;
-
-    @Column(name = "mfa_type")
-    private Integer mfaType;
-
-    private String nickname;
-
-    private String password;
-
+    /**
+     * 用户名 用户名
+     */
     private String username;
 
     /**
-     * @return id
+     * 密码 密码
      */
-    public Integer getId() {
-        return id;
-    }
+    private String password;
 
     /**
-     * @param id
+     * 昵称 昵称
      */
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private String nickname;
 
     /**
-     * @return create_time
+     * 真实姓名
      */
-    public Date getCreateTime() {
-        return createTime;
-    }
+    private String realname;
 
     /**
-     * @param createTime
+     * 头像
      */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+    private String face;
 
     /**
-     * @return update_time
+     * 手机号 手机号
      */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+    private String mobile;
 
     /**
-     * @param updateTime
+     * 邮箱地址 邮箱地址
      */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+    private String email;
 
     /**
-     * @return avatar
+     * 性别 性别 1:男  0:女  2:保密
      */
-    public String getAvatar() {
-        return avatar;
-    }
+    private Integer sex;
 
     /**
-     * @param avatar
+     * 生日 生日
      */
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
+    private Date birthday;
 
     /**
-     * @return description
+     * 创建时间 创建时间
      */
-    public String getDescription() {
-        return description;
-    }
+    @Column(name = "created_time")
+    private Date createdTime;
 
     /**
-     * @param description
+     * 更新时间 更新时间
      */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * @return email
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * @param email
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    /**
-     * @return expire_time
-     */
-    public Date getExpireTime() {
-        return expireTime;
-    }
-
-    /**
-     * @param expireTime
-     */
-    public void setExpireTime(Date expireTime) {
-        this.expireTime = expireTime;
-    }
-
-    /**
-     * @return mfa_key
-     */
-    public String getMfaKey() {
-        return mfaKey;
-    }
-
-    /**
-     * @param mfaKey
-     */
-    public void setMfaKey(String mfaKey) {
-        this.mfaKey = mfaKey;
-    }
-
-    /**
-     * @return mfa_type
-     */
-    public Integer getMfaType() {
-        return mfaType;
-    }
-
-    /**
-     * @param mfaType
-     */
-    public void setMfaType(Integer mfaType) {
-        this.mfaType = mfaType;
-    }
-
-    /**
-     * @return nickname
-     */
-    public String getNickname() {
-        return nickname;
-    }
-
-    /**
-     * @param nickname
-     */
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    /**
-     * @return password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * @param password
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /**
-     * @return username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @Column(name = "updated_time")
+    private Date updatedTime;
 }
