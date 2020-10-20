@@ -1,7 +1,16 @@
 package org.foodie.mapper;
 
-import org.foodie.my.mapper.MyMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.foodie.pojo.ItemsParam;
 
-public interface ItemsParamMapper extends MyMapper<ItemsParam> {
+/**
+ * <p>
+ * 商品参数  Mapper 接口
+ * </p>
+ *
+ * @author steve.mei
+ * @since 2020-10-20
+ */
+public interface ItemsParamMapper extends BaseMapper<ItemsParam> {
+
 }

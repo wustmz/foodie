@@ -1,7 +1,16 @@
 package org.foodie.mapper;
 
-import org.foodie.my.mapper.MyMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.foodie.pojo.Carousel;
 
-public interface CarouselMapper extends MyMapper<Carousel> {
+/**
+ * <p>
+ * 轮播图  Mapper 接口
+ * </p>
+ *
+ * @author steve.mei
+ * @since 2020-10-20
+ */
+public interface CarouselMapper extends BaseMapper<Carousel> {
+
 }
