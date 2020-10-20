@@ -1,202 +1,68 @@
 package org.foodie.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Date;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-@Table(name = "order_status")
-public class OrderStatus {
+import java.time.LocalDateTime;
+
+/**
+ * <p>
+ * 订单状态表 订单的每个状态更改都需要进行记录
+10：待付款  20：已付款，待发货  30：已发货，待收货（7天自动确认）  40：交易成功（此时可以评价）50：交易关闭（待付款时，用户取消 或 长时间未付款，系统识别后自动关闭）
+退货/退货，此分支流程不做，所以不加入
+ * </p>
+ *
+ * @author steve.mei
+ * @since 2020-10-20
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+public class OrderStatus extends Model {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * 订单ID 对应订单表的主键id
      */
-    @Id
-    @Column(name = "order_id")
     private String orderId;
 
     /**
      * 订单状态
      */
-    @Column(name = "order_status")
     private Integer orderStatus;
 
     /**
      * 订单创建时间 对应[10:待付款]状态
      */
-    @Column(name = "created_time")
-    private Date createdTime;
+    private LocalDateTime createdTime;
 
     /**
      * 支付成功时间 对应[20:已付款，待发货]状态
      */
-    @Column(name = "pay_time")
-    private Date payTime;
+    private LocalDateTime payTime;
 
     /**
      * 发货时间 对应[30：已发货，待收货]状态
      */
-    @Column(name = "deliver_time")
-    private Date deliverTime;
+    private LocalDateTime deliverTime;
 
     /**
      * 交易成功时间 对应[40：交易成功]状态
      */
-    @Column(name = "success_time")
-    private Date successTime;
+    private LocalDateTime successTime;
 
     /**
      * 交易关闭时间 对应[50：交易关闭]状态
      */
-    @Column(name = "close_time")
-    private Date closeTime;
+    private LocalDateTime closeTime;
 
     /**
      * 留言时间 用户在交易成功后的留言时间
      */
-    @Column(name = "comment_time")
-    private Date commentTime;
+    private LocalDateTime commentTime;
 
-    /**
-     * 获取订单ID 对应订单表的主键id
-     *
-     * @return order_id - 订单ID 对应订单表的主键id
-     */
-    public String getOrderId() {
-        return orderId;
-    }
 
-    /**
-     * 设置订单ID 对应订单表的主键id
-     *
-     * @param orderId 订单ID 对应订单表的主键id
-     */
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    /**
-     * 获取订单状态
-     *
-     * @return order_status - 订单状态
-     */
-    public Integer getOrderStatus() {
-        return orderStatus;
-    }
-
-    /**
-     * 设置订单状态
-     *
-     * @param orderStatus 订单状态
-     */
-    public void setOrderStatus(Integer orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    /**
-     * 获取订单创建时间 对应[10:待付款]状态
-     *
-     * @return created_time - 订单创建时间 对应[10:待付款]状态
-     */
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    /**
-     * 设置订单创建时间 对应[10:待付款]状态
-     *
-     * @param createdTime 订单创建时间 对应[10:待付款]状态
-     */
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    /**
-     * 获取支付成功时间 对应[20:已付款，待发货]状态
-     *
-     * @return pay_time - 支付成功时间 对应[20:已付款，待发货]状态
-     */
-    public Date getPayTime() {
-        return payTime;
-    }
-
-    /**
-     * 设置支付成功时间 对应[20:已付款，待发货]状态
-     *
-     * @param payTime 支付成功时间 对应[20:已付款，待发货]状态
-     */
-    public void setPayTime(Date payTime) {
-        this.payTime = payTime;
-    }
-
-    /**
-     * 获取发货时间 对应[30：已发货，待收货]状态
-     *
-     * @return deliver_time - 发货时间 对应[30：已发货，待收货]状态
-     */
-    public Date getDeliverTime() {
-        return deliverTime;
-    }
-
-    /**
-     * 设置发货时间 对应[30：已发货，待收货]状态
-     *
-     * @param deliverTime 发货时间 对应[30：已发货，待收货]状态
-     */
-    public void setDeliverTime(Date deliverTime) {
-        this.deliverTime = deliverTime;
-    }
-
-    /**
-     * 获取交易成功时间 对应[40：交易成功]状态
-     *
-     * @return success_time - 交易成功时间 对应[40：交易成功]状态
-     */
-    public Date getSuccessTime() {
-        return successTime;
-    }
-
-    /**
-     * 设置交易成功时间 对应[40：交易成功]状态
-     *
-     * @param successTime 交易成功时间 对应[40：交易成功]状态
-     */
-    public void setSuccessTime(Date successTime) {
-        this.successTime = successTime;
-    }
-
-    /**
-     * 获取交易关闭时间 对应[50：交易关闭]状态
-     *
-     * @return close_time - 交易关闭时间 对应[50：交易关闭]状态
-     */
-    public Date getCloseTime() {
-        return closeTime;
-    }
-
-    /**
-     * 设置交易关闭时间 对应[50：交易关闭]状态
-     *
-     * @param closeTime 交易关闭时间 对应[50：交易关闭]状态
-     */
-    public void setCloseTime(Date closeTime) {
-        this.closeTime = closeTime;
-    }
-
-    /**
-     * 获取留言时间 用户在交易成功后的留言时间
-     *
-     * @return comment_time - 留言时间 用户在交易成功后的留言时间
-     */
-    public Date getCommentTime() {
-        return commentTime;
-    }
-
-    /**
-     * 设置留言时间 用户在交易成功后的留言时间
-     *
-     * @param commentTime 留言时间 用户在交易成功后的留言时间
-     */
-    public void setCommentTime(Date commentTime) {
-        this.commentTime = commentTime;
-    }
 }
