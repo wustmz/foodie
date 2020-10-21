@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.foodie.enums.Sex;
 import org.foodie.mapper.UsersMapper;
 import org.foodie.pojo.Users;
-import org.foodie.pojo.bo.UserBo;
+import org.foodie.pojo.bo.UserBO;
 import org.foodie.service.IUsersService;
 import org.foodie.utils.DateUtil;
 import org.foodie.utils.MD5Utils;
@@ -47,7 +47,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public Users createUser(UserBo userBo) {
+    public Users createUser(UserBO userBo) {
         String uid = sid.nextShort();
 
         Users user = new Users();
@@ -73,5 +73,14 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         usersMapper.insert(user);
 
         return user;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public Users queryUserForLogin(String username, String password) {
+        QueryWrapper<Users> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(Users::getUsername, username)
+                .eq(Users::getPassword, password);
+        return usersMapper.selectOne(wrapper);
     }
 }
