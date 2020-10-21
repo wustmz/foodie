@@ -2,7 +2,7 @@ package org.foodie.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.foodie.pojo.Users;
-import org.foodie.pojo.bo.UserBo;
+import org.foodie.pojo.bo.UserBO;
 
 /**
  * <p>
@@ -14,7 +14,18 @@ import org.foodie.pojo.bo.UserBo;
  */
 public interface IUsersService extends IService<Users> {
 
+    /**
+     * 判断用户名是否存在
+     */
     boolean queryUsernameIsExist(String username);
 
-    Users createUser(UserBo userBo);
+    /**
+     * 创建用户
+     */
+    Users createUser(UserBO userBo);
+
+    /**
+     * 检索用户名和密码是否匹配，用于登录
+     */
+    Users queryUserForLogin(String username, String password);
 }
