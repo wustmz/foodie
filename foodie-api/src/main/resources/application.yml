@@ -13,8 +13,8 @@ server:
 spring:
   datasource: # 数据源的相关配置
     type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
-    driver-class-name: com.mysql.jdbc.Driver # mysql驱动
-    url: jdbc:mysql://localhost:3306/foodie-shop-dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect
+    driver-class-name: com.mysql.cj.jdbc.Driver # mysql驱动
+    url: jdbc:mysql://localhost:3306/foodie-shop?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
     username: root
     password: root
     hikari:
@@ -27,17 +27,32 @@ spring:
       max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
       connection-test-query: SELECT 1
 
-############################################################
-# mybatis配置
-############################################################
-mybatis:
-  type-aliases-package: org.foodie.pojo # 所有POJO类所在包路径
-  mapper-locations: classpath:mapper/*.xml # mapper映射文件
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: org.foodie.pojo
+  global-config:
+    # 数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: ID_WORKER
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: not_empty
+      #驼峰下划线转换
+      table-underline: true
+      #是否开启大写命名，默认不开启
+      #capital-mode: true
+      #逻辑删除配置
+      #logic-delete-value: 1
+      #logic-not-delete-value: 0
+      db-type: mysql
+    #刷新mapper 调试神器
+    refresh: true
+  # 原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    #仅适用于开发环境
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-############################################################
-# 通用mapper配置
-############################################################
-mapper:
-  mappers: org.foodie.my.mapper.MyMapper
-  not-empty: false #在进行数据库操作的时候，判断表达式username != null
-  identity: MYSQL
+
