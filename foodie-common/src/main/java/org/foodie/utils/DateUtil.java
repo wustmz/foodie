@@ -1,6 +1,7 @@
 package org.foodie.utils;
 
 import java.text.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -648,4 +649,9 @@ public class DateUtil {
         System.out.println(flag);
     }
 
+    public static int daysBetween(LocalDateTime early, LocalDateTime late) {
+        int lateDayOfMonth = late.getDayOfMonth();
+        int earlyDayOfMonth = early.getDayOfMonth();
+        return lateDayOfMonth - earlyDayOfMonth;
+    }
 }
