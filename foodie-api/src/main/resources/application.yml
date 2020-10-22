@@ -14,7 +14,7 @@ spring:
   datasource: # 数据源的相关配置
     type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql驱动
-    url: jdbc:mysql://localhost:3306/foodie-shop?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    url: jdbc:mysql://47.107.176.7:13306/foodie-shop?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
     username: root
     password: root
     hikari:
@@ -54,5 +54,10 @@ mybatis-plus:
     cache-enabled: true
     #仅适用于开发环境
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 分页插件配置
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
 
 
