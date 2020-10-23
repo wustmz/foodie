@@ -2,7 +2,6 @@
 # web访问端口号 约定8088
 ###########################################################
 server:
-  port: 8088
   tomcat:
     uri-encoding: UTF-8
   max-http-header-size: 80KB
@@ -14,9 +13,7 @@ spring:
   datasource: # 数据源的相关配置
     type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql驱动
-    url: jdbc:mysql://47.107.176.7:13306/foodie-shop?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
     username: root
-    password: root
     hikari:
       connection-timeout: 30000 # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQ
       minimum-idle: 5 # 最小连接数
@@ -26,6 +23,10 @@ spring:
       pool-name: DateSourceHikariCP # 连接池名字
       max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
       connection-test-query: SELECT 1
+  servlet:
+    multipart:
+      max-file-size: 512000     # 文件上传大小限制为500kb
+      max-request-size: 512000  # 请求大小限制为500kb
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
@@ -52,8 +53,6 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: true
-    #仅适用于开发环境
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # 分页插件配置
 pagehelper:
