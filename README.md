@@ -3,8 +3,10 @@
 
 Tomcat部署架构
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b6d229ca-27b6-4ed5-9d43-ae95dd1c799e/Tomcat部署架构.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b6d229ca-27b6-4ed5-9d43-ae95dd1c799e/Untitled.png)
+![Tomcat部署架构](https://i.loli.net/2020/10/26/k4AEuhLyn6VSBCr.png)
 
 Nginx部署架构
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dcd0041f-6d07-4193-b888-866aaf3b3c8e/Nginx部署架构.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dcd0041f-6d07-4193-b888-866aaf3b3c8e/Untitled.png)
+![Nginx部署架构](https://sm.ms/image/8C9yKHfwQZdnIXE)
+
+> 通过LVS+Keepalived+Nginx实现高可用集群
