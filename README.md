@@ -6,7 +6,6 @@ Tomcat部署架构
 ![Tomcat部署架构](https://i.loli.net/2020/10/26/k4AEuhLyn6VSBCr.png)
 
 Nginx部署架构
-
-![Nginx部署架构](https://sm.ms/image/8C9yKHfwQZdnIXE)
+![Nginx部署架构.png](https://i.loli.net/2020/10/26/8C9yKHfwQZdnIXE.png)
 
 > 通过LVS+Keepalived+Nginx实现高可用集群
