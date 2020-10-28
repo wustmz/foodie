@@ -21,6 +21,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         //与nginx配置的端口一致
         config.addAllowedOrigin("http://localhost:90");
+        config.addAllowedOrigin("*");
 
         // 设置是否发送cookie信息
         config.setAllowCredentials(true);
