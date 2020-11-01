@@ -3,6 +3,7 @@ package org.foodie.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.foodie.enums.YesOrNo;
 import org.foodie.pojo.Carousel;
 import org.foodie.pojo.Category;
@@ -10,6 +11,8 @@ import org.foodie.pojo.vo.CategoryVO;
 import org.foodie.pojo.vo.NewItemsVO;
 import org.foodie.service.ICarouselService;
 import org.foodie.service.ICategoryService;
+import org.foodie.utils.JsonUtils;
+import org.foodie.utils.RedisOperator;
 import org.foodie.utils.ServerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +36,32 @@ public class IndexController {
     @Autowired
     private ICategoryService categoryService;
 
+    @Autowired
+    private RedisOperator redisOperator;
+
+    /**
+     * 如何管理缓存？
+     * 1.后台运营系统，一旦广告发生更改，就可以删除缓存，然后重置
+     * 2.定是重置，比如每天凌晨三点重置
+     * 3.每个轮播图都有可能是一个广告，每个广告都会有一个过期时间，过期了，再重置
+     *
+     * @return
+     */
     @ApiOperation(value = "获取首页轮播图列表", notes = "获取首页轮播图列表", httpMethod = "GET")
     @GetMapping("/carousel")
     public ServerResponse carousel() {
-        List<Carousel> list = carouselService.queryAll(YesOrNo.YES.type);
+        String key = "carousel";
+
+        String cache = redisOperator.get(key);
+
+        List<Carousel> list;
+        if (StringUtils.isBlank(cache)) {
+            list = carouselService.queryAll(YesOrNo.YES.type);
+            redisOperator.set(key, JsonUtils.objectToJson(list));
+        } else {
+            list = JsonUtils.jsonToList(cache, Carousel.class);
+        }
+
         return ServerResponse.ok(list);
     }
 
@@ -48,7 +73,17 @@ public class IndexController {
     @ApiOperation(value = "获取商品分类(一级分类)", notes = "获取商品分类(一级分类)", httpMethod = "GET")
     @GetMapping("/cats")
     public ServerResponse cats() {
-        List<Category> list = categoryService.queryAllRootLevelCat();
+
+        String key = "cats";
+        String cache = redisOperator.get(key);
+        List<Category> list;
+        if (StringUtils.isBlank(cache)) {
+            list = categoryService.queryAllRootLevelCat();
+            redisOperator.set(key, JsonUtils.objectToJson(list));
+        } else {
+            list = JsonUtils.jsonToList(cache, Category.class);
+        }
+
         return ServerResponse.ok(list);
     }
 
