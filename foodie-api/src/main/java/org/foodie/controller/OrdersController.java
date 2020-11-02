@@ -11,6 +11,7 @@ import org.foodie.pojo.bo.SubmitOrderBO;
 import org.foodie.pojo.vo.MerchantOrdersVO;
 import org.foodie.pojo.vo.OrderVO;
 import org.foodie.service.IOrdersService;
+import org.foodie.utils.CookieUtils;
 import org.foodie.utils.JsonUtils;
 import org.foodie.utils.RedisOperator;
 import org.foodie.utils.ServerResponse;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,8 +76,11 @@ public class OrdersController extends BaseController {
          * 3003 -> 用户购买
          * 4004
          */
-        // TODO 整合redis之后，完善购物车中的已结算商品清除，并且同步到前端的cookie
-//        CookieUtils.setCookie(request, response, FOODIE_SHOPCART, "", true);
+        //清理覆盖现有的redis汇总的购物数据
+        shopCartList.removeAll(orderVO.getToBeRemovedShopCartList());
+        redisOperator.set(FOODIE_SHOPCART + ":" + submitOrderBO.getUserId(), JsonUtils.objectToJson(shopCartList));
+        //购物车中的已结算商品清除，并且同步到前端的cookie
+        CookieUtils.setCookie(request, response, FOODIE_SHOPCART, JsonUtils.objectToJson(shopCartList), true);
 
         // 3. 向支付中心发送当前订单，用于保存支付中心的订单数据
         MerchantOrdersVO merchantOrdersVO = orderVO.getMerchantOrdersVO();

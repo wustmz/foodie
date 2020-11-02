@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -100,10 +101,13 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         int totalAmount = 0;
         // 优惠后的实际支付价格累计
         int realPayAmount = 0;
+
+        List<ShopcartBO> toBeRemovedShopCartList = new ArrayList<>();
         for (String itemSpecId : itemSpecIdArr) {
             ShopcartBO cartItem = this.getBuyCountsFromShopCart(shopCartList, itemSpecId);
             //整合redis后，商品购买的数量重新从redis的购物车中获取
             int buyCounts = Objects.nonNull(cartItem) ? cartItem.getBuyCounts() : 1;
+            toBeRemovedShopCartList.add(cartItem);
 
             // 2.1 根据规格id，查询规格的具体信息，主要获取价格
             ItemsSpec itemSpec = itemService.queryItemSpecById(itemSpecId);
@@ -155,6 +159,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         OrderVO orderVO = new OrderVO();
         orderVO.setOrderId(orderId);
         orderVO.setMerchantOrdersVO(merchantOrdersVO);
+        orderVO.setToBeRemovedShopCartList(toBeRemovedShopCartList);
 
         return orderVO;
     }
