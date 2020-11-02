@@ -3,8 +3,11 @@ package org.foodie.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.foodie.pojo.OrderStatus;
 import org.foodie.pojo.Orders;
+import org.foodie.pojo.bo.ShopcartBO;
 import org.foodie.pojo.bo.SubmitOrderBO;
 import org.foodie.pojo.vo.OrderVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -19,9 +22,10 @@ public interface IOrdersService extends IService<Orders> {
     /**
      * 用于创建订单相关信息
      *
+     * @param shopCartList
      * @param submitOrderBO
      */
-    OrderVO createOrder(SubmitOrderBO submitOrderBO);
+    OrderVO createOrder(List<ShopcartBO> shopCartList, SubmitOrderBO submitOrderBO);
 
     /**
      * 修改订单状态

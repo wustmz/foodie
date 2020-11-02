@@ -2,13 +2,17 @@ package org.foodie.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.foodie.enums.OrderStatusEnum;
 import org.foodie.enums.PayMethod;
 import org.foodie.pojo.OrderStatus;
+import org.foodie.pojo.bo.ShopcartBO;
 import org.foodie.pojo.bo.SubmitOrderBO;
 import org.foodie.pojo.vo.MerchantOrdersVO;
 import org.foodie.pojo.vo.OrderVO;
 import org.foodie.service.IOrdersService;
+import org.foodie.utils.JsonUtils;
+import org.foodie.utils.RedisOperator;
 import org.foodie.utils.ServerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Api(value = "订单相关", tags = {"订单相关的api接口"})
 @RequestMapping("orders")
@@ -36,6 +41,9 @@ public class OrdersController extends BaseController {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private RedisOperator redisOperator;
+
     @ApiOperation(value = "用户下单", notes = "用户下单", httpMethod = "POST")
     @PostMapping("/create")
     public ServerResponse create(
@@ -43,13 +51,20 @@ public class OrdersController extends BaseController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        if (submitOrderBO.getPayMethod() != PayMethod.WEIXIN.type
-                && submitOrderBO.getPayMethod() != PayMethod.ALIPAY.type) {
+        if (!submitOrderBO.getPayMethod().equals(PayMethod.WEIXIN.type)
+                && !submitOrderBO.getPayMethod().equals(PayMethod.ALIPAY.type)) {
             return ServerResponse.errorMsg("支付方式不支持！");
         }
 
+        String shopCartJson = redisOperator.get(FOODIE_SHOPCART + ":" + submitOrderBO.getUserId());
+        if (StringUtils.isBlank(shopCartJson)) {
+            return ServerResponse.errorMsg("购物车数据不正确");
+        }
+
+        List<ShopcartBO> shopCartList = JsonUtils.jsonToList(shopCartJson, ShopcartBO.class);
+
         // 1. 创建订单
-        OrderVO orderVO = orderService.createOrder(submitOrderBO);
+        OrderVO orderVO = orderService.createOrder(shopCartList, submitOrderBO);
         String orderId = orderVO.getOrderId();
 
         // 2. 创建订单以后，移除购物车中已结算（已提交）的商品

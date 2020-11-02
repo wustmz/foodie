@@ -9,6 +9,7 @@ import org.foodie.mapper.OrderItemsMapper;
 import org.foodie.mapper.OrderStatusMapper;
 import org.foodie.mapper.OrdersMapper;
 import org.foodie.pojo.*;
+import org.foodie.pojo.bo.ShopcartBO;
 import org.foodie.pojo.bo.SubmitOrderBO;
 import org.foodie.pojo.vo.MerchantOrdersVO;
 import org.foodie.pojo.vo.OrderVO;
@@ -23,8 +24,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -57,7 +58,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public OrderVO createOrder(SubmitOrderBO submitOrderBO) {
+    public OrderVO createOrder(List<ShopcartBO> shopCartList, SubmitOrderBO submitOrderBO) {
         String userId = submitOrderBO.getUserId();
         String addressId = submitOrderBO.getAddressId();
         String itemSpecIds = submitOrderBO.getItemSpecIds();
@@ -95,12 +96,14 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
         // 2. 循环根据itemSpecIds保存订单商品信息表
         String itemSpecIdArr[] = itemSpecIds.split(",");
-        Integer totalAmount = 0;    // 商品原价累计
-        Integer realPayAmount = 0;  // 优惠后的实际支付价格累计
+        // 商品原价累计
+        int totalAmount = 0;
+        // 优惠后的实际支付价格累计
+        int realPayAmount = 0;
         for (String itemSpecId : itemSpecIdArr) {
-
-            // TODO 整合redis后，商品购买的数量重新从redis的购物车中获取
-            int buyCounts = 1;
+            ShopcartBO cartItem = this.getBuyCountsFromShopCart(shopCartList, itemSpecId);
+            //整合redis后，商品购买的数量重新从redis的购物车中获取
+            int buyCounts = Objects.nonNull(cartItem) ? cartItem.getBuyCounts() : 1;
 
             // 2.1 根据规格id，查询规格的具体信息，主要获取价格
             ItemsSpec itemSpec = itemService.queryItemSpecById(itemSpecId);
@@ -154,6 +157,22 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orderVO.setMerchantOrdersVO(merchantOrdersVO);
 
         return orderVO;
+    }
+
+    /**
+     * 从redis购物车中获取商品，目的：counts
+     *
+     * @param shopCartList
+     * @param specId
+     * @return
+     */
+    private ShopcartBO getBuyCountsFromShopCart(List<ShopcartBO> shopCartList, String specId) {
+        for (ShopcartBO cart : shopCartList) {
+            if (cart.getSpecId().equals(specId)) {
+                return cart;
+            }
+        }
+        return null;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
