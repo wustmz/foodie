@@ -6,10 +6,18 @@ spring:
     url: jdbc:mysql://localhost:3306/foodie-shop?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
     password: foodie
   redis:
+    #Redis 单机单实例
+#    database: 1
+#    host: 10.211.55.3
+#    port: 6379
+#    password: mz2020
+
+    #Redis 哨兵模式
     database: 1
-    host: 10.211.55.3
-    port: 6379
     password: mz2020
+    sentinel:
+      master: foodie-master
+      nodes: 192.168.1.191:26379,192.168.1.192:26379,192.168.1.193:26379
 
 mybatis:
   configuration:
