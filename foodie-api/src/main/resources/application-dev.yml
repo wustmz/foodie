@@ -7,17 +7,23 @@ spring:
     password: foodie
   redis:
     #Redis 单机单实例
-#    database: 1
-#    host: 10.211.55.3
-#    port: 6379
-#    password: mz2020
+    #    database: 1
+    #    host: 10.211.55.3
+    #    port: 6379
+    #    password: mz2020
 
     #Redis 哨兵模式
-    database: 1
+    #    database: 1
+    #    password: mz2020
+    #    sentinel:
+    #      master: foodie-master
+    #      nodes: 192.168.1.191:26379,192.168.1.192:26379,192.168.1.193:26379
+
+    #Redis 集群模式
     password: mz2020
-    sentinel:
-      master: foodie-master
-      nodes: 192.168.1.191:26379,192.168.1.192:26379,192.168.1.193:26379
+    cluster:
+      nodes: 192.168.1.201:6379,192.168.1.202:6379,192.168.1.203:6379,192.168.1.204:6379,192.168.1.205:6379,192.168.1.206:6379
+
 
 mybatis:
   configuration:
