@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.foodie.controller.BaseController;
 import org.foodie.pojo.Users;
 import org.foodie.pojo.bo.center.CenterUserBO;
+import org.foodie.pojo.vo.UsersVO;
 import org.foodie.resource.FileUpload;
 import org.foodie.service.center.CenterUserService;
 import org.foodie.utils.CookieUtils;
@@ -130,11 +131,9 @@ public class CenterUserController extends BaseController {
         // 更新用户头像到数据库
         Users userResult = centerUserService.updateUserFace(userId, finalUserFaceUrl);
 
-        setNullProperty(userResult);
+        UsersVO usersVO = convertUsersVO(userResult);
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(userResult), true);
-
-        // TODO 后续要改，增加令牌token，会整合进redis，分布式会话
+                JsonUtils.objectToJson(usersVO), true);
 
         return ServerResponse.ok();
     }
@@ -159,11 +158,10 @@ public class CenterUserController extends BaseController {
 
         Users userResult = centerUserService.updateUserInfo(userId, centerUserBO);
 
-        setNullProperty(userResult);
-        CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(userResult), true);
+        UsersVO usersVO = convertUsersVO(userResult);
 
-        // TODO 后续要改，增加令牌token，会整合进redis，分布式会话
+        CookieUtils.setCookie(request, response, "user",
+                JsonUtils.objectToJson(usersVO), true);
 
         return ServerResponse.ok();
     }
@@ -180,15 +178,6 @@ public class CenterUserController extends BaseController {
             map.put(errorField, errorMsg);
         }
         return map;
-    }
-
-    private void setNullProperty(Users userResult) {
-        userResult.setPassword(null);
-        userResult.setMobile(null);
-        userResult.setEmail(null);
-        userResult.setCreatedTime(null);
-        userResult.setUpdatedTime(null);
-        userResult.setBirthday(null);
     }
 
 }

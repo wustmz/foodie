@@ -2,18 +2,26 @@ package org.foodie.controller;
 
 
 import org.foodie.pojo.Orders;
+import org.foodie.pojo.Users;
+import org.foodie.pojo.vo.UsersVO;
 import org.foodie.service.center.MyOrdersService;
+import org.foodie.utils.RedisOperator;
 import org.foodie.utils.ServerResponse;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.File;
+import java.util.UUID;
 
 /**
  * @author wustmz
  */
 @Controller
 public class BaseController {
+
+    @Autowired
+    private RedisOperator redisOperator;
 
     public static final String FOODIE_SHOPCART = "shopcart";
 
@@ -50,5 +58,16 @@ public class BaseController {
             return ServerResponse.errorMsg("订单不存在！");
         }
         return ServerResponse.ok(order);
+    }
+
+    public UsersVO convertUsersVO(Users userResult) {
+        //实现用户的redis会话
+        String uniqueToken = UUID.randomUUID().toString().trim();
+        redisOperator.set(REDIS_USER_TOKEN + ":" + userResult.getId(), uniqueToken);
+
+        UsersVO usersVO = new UsersVO();
+        BeanUtils.copyProperties(userResult, usersVO);
+        usersVO.setUserUniqueToken(uniqueToken);
+        return usersVO;
     }
 }

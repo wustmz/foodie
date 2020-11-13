@@ -6,8 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.foodie.pojo.Users;
 import org.foodie.pojo.bo.ShopcartBO;
 import org.foodie.pojo.bo.UserBO;
+import org.foodie.pojo.vo.UsersVO;
 import org.foodie.service.IUsersService;
 import org.foodie.utils.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author steve.mei
@@ -81,18 +84,18 @@ public class PassportController extends BaseController {
         }
         //实现注册
         Users userResult = userService.createUser(userBo);
+        UsersVO usersVO = convertUsersVO(userResult);
 
-        setNullProperty(userResult);
 
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(userResult), true);
+                JsonUtils.objectToJson(usersVO), true);
 
-        // TODO 生成用户token，存入redis会话
         //同步购物车数据
         this.syncShopCartData(userResult.getId(), request, response);
 
         return ServerResponse.ok();
     }
+
 
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @PostMapping("/login")
@@ -117,13 +120,11 @@ public class PassportController extends BaseController {
             return ServerResponse.errorMsg("用户名或密码不正确");
         }
 
-        setNullProperty(userResult);
+        UsersVO usersVO = convertUsersVO(userResult);
 
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(userResult), true);
+                JsonUtils.objectToJson(usersVO), true);
 
-
-        // TODO 生成用户token，存入redis会话
         //同步购物车数据
         this.syncShopCartData(userResult.getId(), request, response);
 
@@ -205,20 +206,13 @@ public class PassportController extends BaseController {
         // 清除用户的相关信息的cookie
         CookieUtils.deleteCookie(request, response, "user");
 
+        //用户退出登录，清除redis中user的会话信息
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
+
         // 用户退出登录，需要清空购物车
         CookieUtils.deleteCookie(request, response, FOODIE_SHOPCART);
-        // TODO 分布式会话中需要清除用户数据
 
         return ServerResponse.ok();
-    }
-
-    private void setNullProperty(Users userResult) {
-        userResult.setPassword(null);
-        userResult.setMobile(null);
-        userResult.setEmail(null);
-        userResult.setCreatedTime(null);
-        userResult.setUpdatedTime(null);
-        userResult.setBirthday(null);
     }
 
 
