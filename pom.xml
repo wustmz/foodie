@@ -94,6 +94,12 @@
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
 
+        <!--引入spring安全框架-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
         <!--引入redis依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
