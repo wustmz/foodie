@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
  * @Author steve.mei
@@ -17,7 +16,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 //扫描所有包以及相关组件包
 @ComponentScan(basePackages = {"org.foodie", "org.n3r.idworker"})
 @EnableScheduling
-@EnableRedisHttpSession//开启使用redis作为spring session
+//@EnableRedisHttpSession//开启使用redis作为spring session
 public class Application {
 
     public static void main(String[] args) {
