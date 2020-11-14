@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 502：拦截器拦截到用户token出错
  * 555：异常抛出信息
  * 556: 用户qq校验异常
+ * 557: 校验用户是否在CAS登录
  */
 public class ServerResponse {
 
@@ -65,6 +66,10 @@ public class ServerResponse {
 
     public static ServerResponse errorUserQQ(String msg) {
         return new ServerResponse(556, msg, null);
+    }
+
+    public static ServerResponse errorUserTicket(String msg) {
+        return new ServerResponse(557, msg, null);
     }
 
     public ServerResponse() {
