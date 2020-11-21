@@ -48,17 +48,26 @@ public class ItemsEsServiceImpl implements ItemsEsService {
         Pageable pageable = PageRequest.of(page, pageSize);
 
         // 排序
-//        SortBuilder sortBuilder = new FieldSortBuilder("money").order(SortOrder.ASC);
-//        SortBuilder sortBuilderAge = new FieldSortBuilder("age").order(SortOrder.DESC);
+        SortBuilder sortBuilder;
+
+        if (sort.equals("c")) {
+            sortBuilder = new FieldSortBuilder("sellCounts").order(SortOrder.DESC);
+        } else if (sort.equals("p")) {
+            sortBuilder = new FieldSortBuilder("price").order(SortOrder.ASC);
+        } else {
+            //如果是使用text排序的话，要使用它的keyword作为排序
+            sortBuilder = new FieldSortBuilder("itemName.keyword").order(SortOrder.ASC);
+        }
         String itemNameFiled = "itemName";
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder().
                 withQuery(QueryBuilders.matchQuery(itemNameFiled, keywords)).
                 withPageable(pageable).
-                withHighlightFields(new HighlightBuilder.Field(itemNameFiled).preTags(preTag).postTags(postTag)).
-//                withSort(sortBuilder).
-//                withSort(sortBuilderAge).
-        build();
+                withHighlightFields(new HighlightBuilder.Field(itemNameFiled).
+                        preTags(preTag).
+                        postTags(postTag)).
+                withSort(sortBuilder).
+                build();
         AggregatedPage<Items> pageItems = elasticsearchTemplate.queryForPage(searchQuery, Items.class, new SearchResultMapper() {
             @Override
             public <T> AggregatedPage<T> mapResults(SearchResponse searchResponse, Class<T> aClass, Pageable pageable) {
